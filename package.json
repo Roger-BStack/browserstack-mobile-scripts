@@ -1,0 +1,20 @@
+{
+  "name": "browserstack-mobile-scripts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "espresso": "sh espresso-run-on-browserstack.sh",
+    "xcui": "sh xcui-run-on-browserstack.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Roger-BStack/browserstack-mobile-scripts.git"
+  },
+  "author": "Roger Jefferies",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Roger-BStack/browserstack-mobile-scripts/issues"
+  },
+  "homepage": "https://github.com/Roger-BStack/browserstack-mobile-scripts#readme"
+}
