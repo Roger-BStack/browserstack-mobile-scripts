@@ -47,11 +47,6 @@ echo "\ntrigger_tests: $trigger_tests\n"
 echo "\nbuild_id: $build_id\n"
 
 
-# Wait 15 seconds for build to start
-echo "\Waiting for build $build_id to start...\n"
-sleep 15
-
-
 #-4 wait for tests to finish, checking every 30 secs until timeout of 1800 secs (30mins)
 end=$((SECONDS+1800))
 exit_code=1
@@ -64,8 +59,11 @@ do
     fi
 
     status=$( curl --no-progress-meter -u "$BROWSERSTACK_USERNAME:$BROWSERSTACK_ACCESS_KEY" -X GET "https://api-cloud.browserstack.com/app-automate/espresso/v2/builds/$build_id" | jq -r .status )
-    if [ "$status" == "running" ]; then
+    if [ "$status" == "running"]; then
         echo " - Still running, waiting . . ."
+        sleep 30;
+    elif [ "$status" == "null" ]; then
+        echo "\Waiting for build $build_id to start...\n"
         sleep 30;
     elif [ "$status" == "passed" ]; then
         exit_code=0
