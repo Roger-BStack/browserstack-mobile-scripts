@@ -37,6 +37,8 @@ browserstack_build_request=$(cat <<EOF
 }
 EOF
 )
+POLLING_BROWSERSTACK_USERNAME=$BROWSERSTACK_USERNAME
+POLLING_BROWSERSTACK_ACCESS_KEY=$BROWSERSTACK_ACCESS_KEY
 echo "$browserstack_build_request"
 trigger_tests=$(curl --no-progress-meter -u "$BROWSERSTACK_USERNAME:$BROWSERSTACK_ACCESS_KEY" \
     -X POST "https://api-cloud.browserstack.com/app-automate/espresso/v2/build" \
@@ -46,6 +48,7 @@ build_id=$(echo $trigger_tests | jq -r .build_id)
 
 echo "\ntrigger_tests: $trigger_tests\n"
 echo "\nbuild_id: $build_id\n"
+
 
 
 #-4 wait for tests to finish, checking every 30 secs until timeout of 1800 secs (30mins)
@@ -59,7 +62,7 @@ do
         break
     fi
 
-    build_response=$( curl --no-progress-meter -u "$BROWSERSTACK_USERNAME:$BROWSERSTACK_ACCESS_KEY" -X GET "https://api-cloud.browserstack.com/app-automate/espresso/v2/builds/$build_id")
+    build_response=$( curl --no-progress-meter -u "$POLLING_BROWSERSTACK_USERNAME:$POLLING_BROWSERSTACK_ACCESS_KEY" -X GET "https://api-cloud.browserstack.com/app-automate/espresso/v2/builds/$build_id")
     status=$( echo "$build_response" | jq -r .status )
     if [ "$status" == "running" ]; then
         echo " - Still running, waiting . . ."
