@@ -7,7 +7,7 @@ TEST_APK_PATH=./apps/app-debug-androidTest.apk
 set -e
 
 #-1 upload app
-upload_app=$(curl -v --no-progress-meter -u "$BROWSERSTACK_USERNAME:$BROWSERSTACK_ACCESS_KEY" -X POST "https://api-cloud.browserstack.com/app-automate/espresso/v2/app" -F "file=@$APK_PATH")
+upload_app=$(curl --no-progress-meter -u "$BROWSERSTACK_USERNAME:$BROWSERSTACK_ACCESS_KEY" -X POST "https://api-cloud.browserstack.com/app-automate/espresso/v2/app" -F "file=@$APK_PATH")
 app_url=$(echo $upload_app | jq -r .app_url)
 
 echo "\napp_url: $app_url\n"
@@ -32,7 +32,8 @@ browserstack_build_request=$(cat <<EOF
     "project": "Espresso Script Tests",
     "package": [
         "com.sample.browserstack.samplecalculator"
-    ]
+    ],
+    "shards": {"numberOfShards": 3}
 }
 EOF
 )
@@ -59,7 +60,7 @@ do
     fi
 
     status=$( curl --no-progress-meter -u "$BROWSERSTACK_USERNAME:$BROWSERSTACK_ACCESS_KEY" -X GET "https://api-cloud.browserstack.com/app-automate/espresso/v2/builds/$build_id" | jq -r .status )
-    if [ "$status" == "running"]; then
+    if [ "$status" == "running" ]; then
         echo " - Still running, waiting . . ."
         sleep 30;
     elif [ "$status" == "null" ]; then
