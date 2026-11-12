@@ -30,10 +30,32 @@ browserstack_build_request=$(cat <<EOF
     "testSuite": "$test_url",
     "debug": "true",
     "project": "Espresso Script Tests",
-    "package": [
-        "com.sample.browserstack.samplecalculator"
-    ],
-    "shards": {"numberOfShards": 3}
+    "shards": {
+        "numberOfShards": 3,
+        "mapping": [
+            {
+                "name": "Shard 1 - EnsureInputTests",
+                "strategy": "class",
+                "values": [
+                    "com.sample.browserstack.samplecalculator.EnsureInputTests"
+                ]
+            },
+            {
+                "name": "Shard 2 - EnsureOperationTests",
+                "strategy": "class",
+                "values": [
+                    "com.sample.browserstack.samplecalculator.EnsureOperationTests"
+                ]
+            },
+            {
+                "name": "Shard 3 - EnsureRandomTests",
+                "strategy": "class",
+                "values": [
+                    "com.sample.browserstack.samplecalculator.EnsureRandomTests"
+                ]
+            }
+        ]
+    }
 }
 EOF
 )
